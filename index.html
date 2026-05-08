@@ -1,0 +1,1685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Couch to 5K: Org Design — 30 Days. 10 Minutes a Day.</title>
+  <meta name="description" content="A free 30-day program to learn organization design. 10 minutes a day. No prior experience required.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+
+    /* ─── Variables ──────────────────────────────────────────── */
+    :root {
+      --bg:           #FAF7F2;
+      --text:         #1C1C1A;
+      --accent:       #C4622D;
+      --accent-dark:  #A85225;
+      --green:        #7A9E7E;
+      --moss:         #4A6741;
+      --muted:        #8A8278;
+      --border:       #E2D9CE;
+      --prompt-bg:    #F0EBE4;
+      --takeaway-bg:  #FEF5EE;
+      --complete-bg:  #F2F8F3;
+
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'Source Serif 4', Georgia, serif;
+      --font-mono:    'Courier Prime', 'Courier New', monospace;
+    }
+
+    /* ─── Reset & Base ───────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--font-display);
+      line-height: 1.25;
+    }
+
+    p { margin-bottom: 0; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    button { cursor: pointer; font-family: var(--font-body); border: none; }
+    input, textarea {
+      font-family: var(--font-body);
+      font-size: 16px;
+    }
+
+    /* ─── Page Layout ────────────────────────────────────────── */
+    .page-layout {
+      display: flex;
+      max-width: 1100px;
+      margin: 0 auto;
+      align-items: flex-start;
+    }
+
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      padding: 0 56px 0 56px;
+    }
+
+    .section-pad {
+      padding: 72px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-heading {
+      font-size: clamp(26px, 3vw, 34px);
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .section-sub {
+      font-size: 17px;
+      color: var(--muted);
+      margin-bottom: 36px;
+      max-width: 520px;
+      line-height: 1.65;
+    }
+
+    /* ─── Garden Panel (Desktop) ─────────────────────────────── */
+    .garden-panel {
+      width: 250px;
+      flex-shrink: 0;
+      padding: 60px 24px 60px 0;
+      position: sticky;
+      top: 40px;
+      align-self: flex-start;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .garden-svg { width: 100%; max-width: 210px; }
+
+    .garden-count {
+      font-size: 13px;
+      color: var(--green);
+      margin-top: 10px;
+      letter-spacing: 0.03em;
+      font-family: var(--font-body);
+    }
+
+    /* ─── Garden SVG Animation ───────────────────────────────── */
+    .garden-element {
+      opacity: 0;
+      transform: scaleY(0);
+      transform-box: fill-box;
+      transform-origin: bottom center;
+      transition: opacity 1.5s ease, transform 1.5s ease;
+    }
+    .garden-element.visible {
+      opacity: 1;
+      transform: scaleY(1);
+    }
+
+    /* ─── Hero ───────────────────────────────────────────────── */
+    .hero {
+      padding: 80px 0 72px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-title {
+      font-size: clamp(38px, 5.5vw, 60px);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 24px;
+      max-width: 540px;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-tagline {
+      font-size: 20px;
+      line-height: 1.5;
+      margin-bottom: 8px;
+      max-width: 480px;
+    }
+
+    .hero-sub {
+      font-size: 16px;
+      color: var(--muted);
+      margin-bottom: 40px;
+      max-width: 460px;
+    }
+
+    /* Email Form (Beehiiv placeholder) */
+    .email-form { max-width: 460px; }
+
+    .email-row {
+      display: flex;
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      background: #fff;
+      margin-bottom: 12px;
+    }
+
+    .email-row input[type="email"] {
+      flex: 1;
+      padding: 14px 18px;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 16px;
+    }
+
+    .email-row input[type="email"]::placeholder { color: #C0B8B0; }
+
+    .email-row button {
+      padding: 14px 20px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+      font-size: 15px;
+      white-space: nowrap;
+      border-radius: 0;
+      transition: background 0.2s;
+      line-height: 1.3;
+    }
+
+    .email-row button:hover { background: var(--accent-dark); }
+
+    .email-note {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .email-success {
+      display: none;
+      padding: 14px 18px;
+      background: var(--complete-bg);
+      border: 1px solid var(--green);
+      border-radius: 6px;
+      color: var(--moss);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .email-success.show { display: block; }
+
+    /* ─── Mobile Garden ──────────────────────────────────────── */
+    .garden-mobile {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ─── What You'll Build ──────────────────────────────────── */
+    .wyb-body p {
+      font-size: 19px;
+      line-height: 1.7;
+      max-width: 580px;
+      margin-bottom: 20px;
+    }
+    .wyb-body p:last-child { margin-bottom: 0; }
+
+    /* ─── Commitment ─────────────────────────────────────────── */
+    .commitment-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 440px;
+    }
+
+    .field label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 4px;
+      background: #fff;
+      color: var(--text);
+      transition: border-color 0.2s;
+    }
+
+    .field input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .commit-btn {
+      align-self: flex-start;
+      padding: 13px 28px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+      font-size: 16px;
+      border-radius: 4px;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .commit-btn:hover { background: var(--accent-dark); }
+    .commit-btn:active { transform: scale(0.98); }
+
+    .commit-note {
+      font-size: 13px;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .commit-success {
+      display: none;
+      margin-top: 4px;
+      padding: 14px 18px;
+      background: var(--complete-bg);
+      border: 1px solid var(--green);
+      border-radius: 4px;
+      color: var(--moss);
+      font-size: 15px;
+    }
+
+    .commit-success.show { display: block; }
+
+    /* ─── Phase Cards ────────────────────────────────────────── */
+    .phases-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .phase-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 22px 18px;
+    }
+
+    .phase-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .phase-name {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--moss);
+      margin-bottom: 10px;
+    }
+
+    .phase-desc {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .phase-days-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    /* ─── 30 Days Section ────────────────────────────────────── */
+    .week-tabs-bar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: var(--bg);
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 4px;
+    }
+
+    .week-tabs {
+      display: flex;
+      gap: 4px;
+    }
+
+    .week-tab {
+      padding: 8px 16px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      transition: all 0.18s;
+    }
+
+    .week-tab:hover {
+      color: var(--text);
+      background: #fff;
+      border-color: var(--border);
+    }
+
+    .week-tab.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    /* Phase sub-headers within day list */
+    .phase-header {
+      padding: 28px 0 10px;
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--moss);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .week-anchor { scroll-margin-top: 60px; }
+
+    /* Day Items */
+    .day-item {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .day-item.completed {
+      border-left: 3px solid var(--green);
+    }
+
+    .day-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 4px 18px 16px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s;
+    }
+
+    .day-item.completed .day-header {
+      padding-left: 13px;
+    }
+
+    .day-header:hover { background: rgba(196,98,45,0.03); }
+
+    /* Custom Checkbox */
+    .day-check {
+      position: relative;
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+    }
+
+    .day-check input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      z-index: 1;
+      margin: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .checkmark {
+      display: block;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: #fff;
+      position: relative;
+      transition: background 0.25s, border-color 0.25s;
+    }
+
+    .checkmark::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 5px;
+      height: 9px;
+      border-right: 2px solid #fff;
+      border-bottom: 2px solid #fff;
+      transform: translate(-50%, -62%) rotate(45deg) scale(0);
+      transition: transform 0.2s ease;
+    }
+
+    .day-check input:checked ~ .checkmark {
+      background: var(--green);
+      border-color: var(--green);
+    }
+
+    .day-check input:checked ~ .checkmark::after {
+      transform: translate(-50%, -62%) rotate(45deg) scale(1);
+    }
+
+    .day-num-label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+      min-width: 46px;
+      flex-shrink: 0;
+    }
+
+    .day-title {
+      flex: 1;
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 600;
+      transition: color 0.25s;
+    }
+
+    .day-item.completed .day-title {
+      text-decoration: line-through;
+      text-decoration-color: #B5C9B7;
+      text-decoration-thickness: 1px;
+      color: #8A9E8C;
+    }
+
+    .chevron {
+      color: var(--muted);
+      font-size: 20px;
+      line-height: 1;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+      padding-right: 4px;
+    }
+
+    .day-item.open .chevron { transform: rotate(90deg); }
+
+    /* Accordion body */
+    .day-body-wrap {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.35s ease;
+    }
+
+    .day-item.open .day-body-wrap { grid-template-rows: 1fr; }
+
+    .day-body { overflow: hidden; }
+
+    .day-body-inner {
+      padding: 8px 16px 32px 56px;
+    }
+
+    .day-intro {
+      font-size: 17px;
+      line-height: 1.7;
+      margin-bottom: 22px;
+      max-width: 560px;
+    }
+
+    .prompt-block {
+      background: var(--prompt-bg);
+      border-radius: 6px;
+      padding: 18px 22px;
+      margin-bottom: 18px;
+      max-width: 560px;
+    }
+
+    .block-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .prompt-text {
+      font-family: var(--font-mono);
+      font-size: 15px;
+      line-height: 1.72;
+      color: var(--text);
+    }
+
+    .takeaway-block {
+      background: var(--takeaway-bg);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 6px 6px 0;
+      padding: 15px 20px;
+      margin-bottom: 24px;
+      max-width: 560px;
+    }
+
+    .takeaway-block .block-label { color: var(--accent); }
+
+    .takeaway-text {
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    .complete-btn {
+      padding: 11px 22px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+      font-size: 15px;
+      border-radius: 4px;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .complete-btn:hover { background: var(--accent-dark); }
+    .complete-btn:active { transform: scale(0.97); }
+
+    .complete-btn.done {
+      background: var(--green);
+      cursor: default;
+    }
+
+    @keyframes bloom-pulse {
+      0%   { transform: scale(1); }
+      35%  { transform: scale(1.07); }
+      100% { transform: scale(1); }
+    }
+
+    .complete-btn.blooming { animation: bloom-pulse 0.55s ease; }
+
+    /* ─── Footer ─────────────────────────────────────────────── */
+    footer {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 56px;
+    }
+
+    .footer-newsletter {
+      max-width: 460px;
+      margin-bottom: 48px;
+    }
+
+    .footer-newsletter h3 {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .footer-newsletter p {
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 28px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .footer-links a {
+      font-size: 14px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .footer-links a:hover { color: var(--accent); }
+
+    .footer-copy {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* ─── Responsive ─────────────────────────────────────────── */
+    @media (max-width: 920px) {
+      .phases-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .page-layout { flex-direction: column; }
+
+      .main-content { padding: 0 24px; width: 100%; }
+
+      .garden-panel { display: none; }
+
+      .garden-mobile { display: flex; }
+
+      .day-body-inner { padding: 8px 16px 28px 16px; }
+
+      .footer-inner { padding: 48px 24px; }
+
+      .hero-title { font-size: 38px; }
+
+      .email-row { flex-direction: column; }
+      .email-row button { border-radius: 0 0 4px 4px; text-align: center; }
+    }
+
+    @media (max-width: 520px) {
+      .phases-grid { grid-template-columns: 1fr; }
+      .week-tab { padding: 7px 12px; font-size: 12px; }
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="page-layout">
+
+  <!-- ─── MAIN CONTENT ──────────────────────────────────────── -->
+  <main class="main-content">
+
+    <!-- ═══ HERO ═════════════════════════════════════════════ -->
+    <section class="hero">
+      <p class="hero-eyebrow">Free 30-day program</p>
+      <h1 class="hero-title">Couch to 5K:<br><em>Org Design</em></h1>
+      <p class="hero-tagline">30 days. 10 minutes a day. Learn to see your organization the way a designer does.</p>
+      <p class="hero-sub">No prior experience required. Just bring the organization you already work inside.</p>
+
+      <!-- ╔══════════════════════════════════════════════════╗ -->
+      <!-- ║  BEEHIIV HERO EMBED                              ║ -->
+      <!-- ║  Replace this entire block with your Beehiiv    ║ -->
+      <!-- ║  embed code from Publication Settings > Embeds  ║ -->
+      <!-- ╚══════════════════════════════════════════════════╝ -->
+      <div class="email-form" id="hero-form-wrap">
+        <form id="hero-form" onsubmit="handleEmailSubmit(event,'hero')">
+          <div class="email-row">
+            <input type="email" id="hero-email" placeholder="Your email address" required>
+            <button type="submit">Start the program — get your free canvas</button>
+          </div>
+        </form>
+        <p class="email-note">You'll receive the OD Canvas download and your first day's prompt by email.</p>
+        <div class="email-success" id="hero-success">Check your email — your OD Canvas is on its way.</div>
+      </div>
+      <!-- ╔══════════════════════════════════════════════════╗ -->
+      <!-- ║  END BEEHIIV HERO EMBED                          ║ -->
+      <!-- ╚══════════════════════════════════════════════════╝ -->
+    </section>
+
+    <!-- ═══ MOBILE GARDEN (shows between hero + wyb on mobile) ═ -->
+    <div class="garden-mobile" id="garden-mobile">
+      <svg class="garden-svg" viewBox="0 0 220 330" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <g class="garden-pot">
+          <rect x="40" y="216" width="140" height="18" rx="5" fill="#B05525"/>
+          <path d="M 50 234 L 170 234 L 154 308 L 66 308 Z" fill="#C4622D"/>
+          <path d="M 50 234 L 74 234 L 70 308 L 66 308 Z" fill="#CF7040" opacity="0.35"/>
+        </g>
+        <ellipse class="garden-soil" cx="110" cy="227" rx="56" ry="12" fill="#2C1810"/>
+        <g class="garden-element garden-seedling">
+          <line x1="110" y1="224" x2="110" y2="195" stroke="#527A55" stroke-width="3" stroke-linecap="round"/>
+          <path d="M 109 210 C 100 202 87 205 90 213 C 92 219 107 215 109 210" fill="#7A9E7E"/>
+          <path d="M 111 210 C 120 202 133 205 130 213 C 128 219 113 215 111 210" fill="#6B9070"/>
+          <circle cx="110" cy="194" r="3.5" fill="#8AB08E"/>
+        </g>
+        <g class="garden-element garden-stem">
+          <line x1="110" y1="226" x2="110" y2="133" stroke="#527A55" stroke-width="3.5" stroke-linecap="round"/>
+        </g>
+        <g class="garden-element garden-leaves-small">
+          <path d="M 109 188 C 97 179 80 182 84 194 C 87 203 107 196 109 188" fill="#7A9E7E"/>
+          <path d="M 111 188 C 123 179 140 182 136 194 C 133 203 113 196 111 188" fill="#6B9070"/>
+        </g>
+        <g class="garden-element garden-leaves-large">
+          <path d="M 108 165 C 92 154 70 158 75 172 C 79 183 107 173 108 165" fill="#7A9E7E"/>
+          <path d="M 112 165 C 128 154 150 158 145 172 C 141 183 113 173 112 165" fill="#6B9070"/>
+        </g>
+        <g class="garden-element garden-branch-left">
+          <path d="M 109 155 Q 87 142 72 122" stroke="#527A55" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M 69 119 C 58 110 61 97 71 99 C 81 101 78 116 69 119" fill="#7A9E7E"/>
+        </g>
+        <g class="garden-element garden-branch-right">
+          <path d="M 111 155 Q 133 142 148 122" stroke="#527A55" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M 151 119 C 162 110 159 97 149 99 C 139 101 142 116 151 119" fill="#6B9070"/>
+        </g>
+        <g class="garden-element garden-buds">
+          <ellipse cx="110" cy="138" rx="6" ry="9" fill="#A8C5AB"/>
+          <ellipse cx="110" cy="134" rx="4" ry="5.5" fill="#C4DFC8"/>
+          <ellipse cx="71" cy="114" rx="5" ry="7.5" fill="#A8C5AB"/>
+          <ellipse cx="71" cy="111" rx="3.5" ry="4.5" fill="#C4DFC8"/>
+          <ellipse cx="149" cy="114" rx="5" ry="7.5" fill="#A8C5AB"/>
+          <ellipse cx="149" cy="111" rx="3.5" ry="4.5" fill="#C4DFC8"/>
+        </g>
+        <g class="garden-element garden-bloom-1">
+          <circle cx="110" cy="121" r="8.5" fill="#F5E6D3"/>
+          <circle cx="123" cy="127" r="8.5" fill="#F0D4BD"/>
+          <circle cx="123" cy="141" r="8.5" fill="#F5E6D3"/>
+          <circle cx="110" cy="147" r="8.5" fill="#F0D4BD"/>
+          <circle cx="97"  cy="141" r="8.5" fill="#F5E6D3"/>
+          <circle cx="97"  cy="127" r="8.5" fill="#F0D4BD"/>
+          <circle cx="110" cy="134" r="11"  fill="#C4622D"/>
+          <circle cx="110" cy="134" r="5"   fill="#D4773A"/>
+        </g>
+        <g class="garden-element garden-bloom-2">
+          <circle cx="71" cy="100" r="6.5" fill="#F5E6D3"/>
+          <circle cx="81" cy="105" r="6.5" fill="#F0D4BD"/>
+          <circle cx="81" cy="116" r="6.5" fill="#F5E6D3"/>
+          <circle cx="71" cy="121" r="6.5" fill="#F0D4BD"/>
+          <circle cx="61" cy="116" r="6.5" fill="#F5E6D3"/>
+          <circle cx="61" cy="105" r="6.5" fill="#F0D4BD"/>
+          <circle cx="71" cy="110" r="8.5" fill="#C4622D"/>
+          <circle cx="71" cy="110" r="4"   fill="#D4773A"/>
+        </g>
+        <g class="garden-element garden-bloom-3">
+          <circle cx="149" cy="100" r="6.5" fill="#F5E6D3"/>
+          <circle cx="159" cy="105" r="6.5" fill="#F0D4BD"/>
+          <circle cx="159" cy="116" r="6.5" fill="#F5E6D3"/>
+          <circle cx="149" cy="121" r="6.5" fill="#F0D4BD"/>
+          <circle cx="139" cy="116" r="6.5" fill="#F5E6D3"/>
+          <circle cx="139" cy="105" r="6.5" fill="#F0D4BD"/>
+          <circle cx="149" cy="110" r="8.5" fill="#C4622D"/>
+          <circle cx="149" cy="110" r="4"   fill="#D4773A"/>
+        </g>
+      </svg>
+      <div class="garden-count" id="count-mobile">0 days complete</div>
+    </div>
+
+    <!-- ═══ WHAT YOU'LL BUILD ══════════════════════════════════ -->
+    <section class="section-pad">
+      <h2 class="section-heading">What you'll build</h2>
+      <div class="wyb-body">
+        <p>By day 30, you'll have a one-page diagnosis of a real organizational challenge — written in plain language, grounded in what you actually observed, ready to share with a colleague or manager.</p>
+        <p>You won't study case studies. You'll study the organization you already sit inside.</p>
+        <p>Every day builds on the last. The prompts take 10 minutes. The thinking stays with you.</p>
+      </div>
+    </section>
+
+    <!-- ═══ COMMITMENT ════════════════════════════════════════ -->
+    <section class="section-pad">
+      <h2 class="section-heading">Lock in your diagnosis date</h2>
+      <p class="section-sub">Pick a meeting or conversation where you'll share what you find. It could be a team all-hands, a 1:1 with your manager, or a peer debrief. Writing it down makes it real.</p>
+      <form class="commitment-form" id="commitment-form" onsubmit="handleCommitment(event)">
+        <div class="field">
+          <label for="venue">Where will you share it?</label>
+          <input type="text" id="venue" placeholder="e.g. Monthly team all-hands">
+        </div>
+        <div class="field">
+          <label for="commit-date">Date</label>
+          <input type="date" id="commit-date">
+        </div>
+        <button type="submit" class="commit-btn">Commit</button>
+        <p class="commit-note">Optional, but the research on commitment devices is clear.</p>
+      </form>
+      <div class="commit-success" id="commit-success">✓ Calendar file downloaded. See you on the other side.</div>
+    </section>
+
+    <!-- ═══ FOUR PHASES ════════════════════════════════════════ -->
+    <section class="section-pad">
+      <h2 class="section-heading">The four phases</h2>
+      <div class="phases-grid">
+        <div class="phase-card">
+          <div class="phase-num">Phase 1</div>
+          <div class="phase-name">Sense</div>
+          <p class="phase-desc">Noticing before naming. No frameworks yet — just learning to see.</p>
+          <div class="phase-days-label">Days 1–8</div>
+        </div>
+        <div class="phase-card">
+          <div class="phase-num">Phase 2</div>
+          <div class="phase-name">Ground</div>
+          <p class="phase-desc">Your first lenses. One concept every two days, applied immediately.</p>
+          <div class="phase-days-label">Days 9–17</div>
+        </div>
+        <div class="phase-card">
+          <div class="phase-num">Phase 3</div>
+          <div class="phase-name">Branch</div>
+          <p class="phase-desc">Observations start connecting. You begin to see the system.</p>
+          <div class="phase-days-label">Days 18–24</div>
+        </div>
+        <div class="phase-card">
+          <div class="phase-num">Phase 4</div>
+          <div class="phase-name">Bloom</div>
+          <p class="phase-desc">Writing it down. Your one-page diagnosis takes shape.</p>
+          <div class="phase-days-label">Days 25–30</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ YOUR 30 DAYS ═══════════════════════════════════════ -->
+    <section class="section-pad" style="border-bottom:none;">
+      <h2 class="section-heading">Your 30 days</h2>
+
+      <div class="week-tabs-bar">
+        <div class="week-tabs" role="tablist">
+          <button class="week-tab active" data-week="1" onclick="jumpToWeek(1)" role="tab" aria-selected="true">Week 1</button>
+          <button class="week-tab" data-week="2" onclick="jumpToWeek(2)" role="tab">Week 2</button>
+          <button class="week-tab" data-week="3" onclick="jumpToWeek(3)" role="tab">Week 3</button>
+          <button class="week-tab" data-week="4" onclick="jumpToWeek(4)" role="tab">Week 4</button>
+        </div>
+      </div>
+
+      <!-- ── WEEK 1: Days 1–7 ────────────────────────────────── -->
+      <div class="week-anchor" id="week-1">
+        <div class="phase-header">Phase 1 — Sense &nbsp;·&nbsp; Days 1–8</div>
+
+        <div class="day-item" id="day-1">
+          <div class="day-header" onclick="toggleDay(1)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(1,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 1</span>
+            <span class="day-title">The Decision</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">Every organization makes decisions differently. Most people have been inside that process hundreds of times without ever really watching it.</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Think of one decision that was made in your organization this week — big or small. Write one sentence describing what it was and how it got made. Don't analyze it yet. Just describe it.</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">Noticing is harder than it sounds. Most of us have learned to look past the machinery and just accept the output. This week we slow that down.</p></div>
+            <button class="complete-btn" id="btn-1" onclick="markComplete(1)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+
+        <div class="day-item" id="day-2">
+          <div class="day-header" onclick="toggleDay(2)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(2,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 2</span>
+            <span class="day-title">Who Was in the Room</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">Decisions reveal a lot about how an organization thinks about who matters.</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Go back to yesterday's decision. Who was involved? Who made the final call? Who was noticeably absent from the conversation? Write down three names or roles — in the room, not in the room, and who you'd have expected to be there.</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">The gap between who was there and who you'd expect is often where organizational design problems live.</p></div>
+            <button class="complete-btn" id="btn-2" onclick="markComplete(2)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+
+        <div class="day-item" id="day-3">
+          <div class="day-header" onclick="toggleDay(3)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(3,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 3</span>
+            <span class="day-title">Where Work Slows Down</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">Every organization has friction points — places where work consistently gets stuck, delayed, or handed off awkwardly.</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Think about your last two weeks of work. Where did something slow down that you didn't expect? Describe the moment: what were you waiting for, and who or what were you waiting on?</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">Friction points are rarely random. They tend to cluster around boundaries — between teams, between roles, between systems. Keep a mental note of where yours appear.</p></div>
+            <button class="complete-btn" id="btn-3" onclick="markComplete(3)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+
+        <div class="day-item" id="day-4">
+          <div class="day-header" onclick="toggleDay(4)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(4,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 4</span>
+            <span class="day-title">Stated vs. Real</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">Every organization has things it says it optimizes for. And then there are the things it actually optimizes for. These are rarely identical.</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">What does your team or organization say it prioritizes? (Speed, quality, customer obsession, innovation — whatever the stated value is.) Now think about the last month. What did your organization actually reward, protect, or make easier? Write one sentence for each.</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">The gap between stated and real priorities is not usually hypocrisy — it's design. The organization is producing exactly what its structure and incentives are set up to produce.</p></div>
+            <button class="complete-btn" id="btn-4" onclick="markComplete(4)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+
+        <div class="day-item" id="day-5">
+          <div class="day-header" onclick="toggleDay(5)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(5,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 5</span>
+            <span class="day-title">Two Org Charts</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">The org chart on the intranet shows reporting lines. It rarely shows how work actually moves.</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Draw your team's org chart as it officially exists. Then, next to it, draw how work actually flows — who talks to whom, who unblocks whom, where decisions actually land. They don't have to be neat. Just honest.</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">The delta between these two pictures is some of the most useful information an org designer can have. Hold onto both.</p></div>
+            <button class="complete-btn" id="btn-5" onclick="markComplete(5)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+
+        <div class="day-item" id="day-6">
+          <div class="day-header" onclick="toggleDay(6)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(6,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 6</span>
+            <span class="day-title">The Recurring Tension</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">Most organizations have one or two tensions that never quite get resolved — they surface in different meetings, under different names, but they're the same underlying thing.</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">What's a tension in your organization that keeps coming up and never quite gets settled? Describe it in two sentences: what it looks like on the surface, and what you think it's really about underneath.</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">Recurring tensions are usually structural. They're not personality clashes or communication failures — they're what happens when the design produces conflicting pressures on real people.</p></div>
+            <button class="complete-btn" id="btn-6" onclick="markComplete(6)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+
+        <div class="day-item" id="day-7">
+          <div class="day-header" onclick="toggleDay(7)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(7,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 7</span>
+            <span class="day-title">Rest + Reflect</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">You've been noticing for six days. Before adding anything new, it's worth pausing to see what's already accumulated.</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Look back at what you wrote this week. What surprised you most? What pattern are you starting to notice that you didn't expect? Write three sentences — no more.</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">The most important OD skill isn't analysis. It's sustained, honest attention. You've been practicing it all week.</p></div>
+            <button class="complete-btn" id="btn-7" onclick="markComplete(7)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+      </div><!-- end week-1 -->
+
+      <!-- ── WEEK 2: Days 8–14 ───────────────────────────────── -->
+      <div class="week-anchor" id="week-2">
+        <div class="phase-header" style="margin-top:0;">Phase 1 continued &amp; Phase 2 begins</div>
+
+        <div class="day-item" id="day-8">
+          <div class="day-header" onclick="toggleDay(8)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(8,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 8</span>
+            <span class="day-title">The Outside Sentence</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">One of the most clarifying exercises in org design is trying to describe a familiar organization to someone who has never heard of it.</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Write one sentence describing your organization — or your team — as if explaining it to someone completely outside it. Not the official elevator pitch. An honest description of what it actually is and how it actually works.</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">If this sentence was hard to write, that's information. Organizations that are hard to describe simply are often hard to navigate for the same reason.</p></div>
+            <button class="complete-btn" id="btn-8" onclick="markComplete(8)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+
+        <div class="phase-header">Phase 2 — Ground &nbsp;·&nbsp; Days 9–17</div>
+
+        <div class="day-item" id="day-9">
+          <div class="day-header" onclick="toggleDay(9)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(9,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 9</span>
+            <span class="day-title">What Is Structure</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">Structure is how an organization groups its work and its people. It's the first and most visible design choice an org makes.</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">How is your organization structured? By function (HR, Finance, Engineering)? By product or business line? By geography? By customer type? Write one sentence naming the primary organizing logic — and one sentence on whether you think it's the right one.</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">There is no perfect structure. Every structure optimizes for something and creates friction somewhere else. The question is always: what are we choosing to make easy, and what are we choosing to make hard?</p></div>
+            <button class="complete-btn" id="btn-9" onclick="markComplete(9)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+
+        <div class="day-item" id="day-10">
+          <div class="day-header" onclick="toggleDay(10)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(10,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 10</span>
+            <span class="day-title">Apply Structure</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">Now apply yesterday's lens to something specific.</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Think about a coordination problem you've experienced — two teams who struggled to work together, a handoff that kept going wrong, a decision that fell into a gap. Does the structure you described yesterday explain why that problem exists? Write two sentences.</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">Most coordination problems aren't relationship problems. They're structural problems that show up as relationship problems because people are the ones who experience the friction.</p></div>
+            <button class="complete-btn" id="btn-10" onclick="markComplete(10)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+
+        <div class="day-item" id="day-11">
+          <div class="day-header" onclick="toggleDay(11)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(11,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 11</span>
+            <span class="day-title">Decision Rights</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">Decision rights are the invisible architecture of an organization — who gets to decide what, and how explicitly that's actually understood.</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Pick one type of decision that happens regularly in your organization — a budget call, a hiring decision, a product choice, a process change. Who officially owns it? Who actually makes it? Who can block it? Write one sentence for each.</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">When these three answers are different people, you have a decision rights problem. It's one of the most common and most costly design gaps in organizations.</p></div>
+            <button class="complete-btn" id="btn-11" onclick="markComplete(11)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+
+        <div class="day-item" id="day-12">
+          <div class="day-header" onclick="toggleDay(12)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(12,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 12</span>
+            <span class="day-title">Apply Decision Rights</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">Go back to the slow decision from Day 1.</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Map the decision rights for that decision. Who owned it officially? Who actually decided? Who could have said no? Does that explain why it moved the way it did?</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">Decision rights aren't just about authority. They're about clarity. People can navigate almost any structure if they know who owns what. Ambiguity is the real cost.</p></div>
+            <button class="complete-btn" id="btn-12" onclick="markComplete(12)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+
+        <div class="day-item" id="day-13">
+          <div class="day-header" onclick="toggleDay(13)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(13,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 13</span>
+            <span class="day-title">Coordination</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">Coordination is how different parts of an organization talk to each other and align their work. It's expensive, and most organizations have too much of the wrong kind.</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">How do the different teams or functions in your organization stay aligned? List the main mechanisms: recurring meetings, shared documents, dedicated roles, approval processes. Now mark each one: is it working, neutral, or creating more friction than it solves?</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">Coordination mechanisms accumulate over time and rarely get retired. Most organizations are carrying coordination debt — meetings and processes that made sense once but now just slow things down.</p></div>
+            <button class="complete-btn" id="btn-13" onclick="markComplete(13)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+
+        <div class="day-item" id="day-14">
+          <div class="day-header" onclick="toggleDay(14)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(14,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 14</span>
+            <span class="day-title">Apply Coordination</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">Connect today's lens to what you've already observed.</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Go back to your friction point from Day 3. Is the root cause a coordination problem? If so, what mechanism is missing — or what mechanism exists but isn't working? Write two sentences.</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">Adding more coordination is almost never the answer. The better question is whether the underlying structure is creating a coordination need that shouldn't exist.</p></div>
+            <button class="complete-btn" id="btn-14" onclick="markComplete(14)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+      </div><!-- end week-2 -->
+
+      <!-- ── WEEK 3: Days 15–21 ──────────────────────────────── -->
+      <div class="week-anchor" id="week-3">
+        <div class="phase-header" style="margin-top:0;">Phase 2 continued &amp; Phase 3 begins</div>
+
+        <div class="day-item" id="day-15">
+          <div class="day-header" onclick="toggleDay(15)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(15,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 15</span>
+            <span class="day-title">Incentives</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">Incentives are what an organization actually rewards — through compensation, recognition, promotion, and the quieter signals of what gets celebrated versus ignored.</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">What does your organization reward in practice? Think about the last person who got promoted, the last project that got celebrated, the last behavior that got quietly reinforced. Write one sentence on what the pattern tells you.</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">Incentives are the most honest part of an organization's design. Everything else can be a stated intention. Incentives are revealed preferences.</p></div>
+            <button class="complete-btn" id="btn-15" onclick="markComplete(15)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+
+        <div class="day-item" id="day-16">
+          <div class="day-header" onclick="toggleDay(16)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(16,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 16</span>
+            <span class="day-title">Apply Incentives</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">Now connect incentives to the recurring tension you identified on Day 6.</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Who benefits — even unintentionally — from the tension staying unresolved? What does the current incentive structure reward that makes change difficult? Write two sentences.</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">Most persistent organizational problems have incentive structures that sustain them. This isn't cynicism — it's design literacy. You can't fix what you can't name.</p></div>
+            <button class="complete-btn" id="btn-16" onclick="markComplete(16)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+
+        <div class="day-item" id="day-17">
+          <div class="day-header" onclick="toggleDay(17)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(17,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 17</span>
+            <span class="day-title">Rest + Reflect</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">You now have four lenses: structure, decision rights, coordination, and incentives. That's more than most managers ever use deliberately.</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Which of the four lenses felt most clarifying when you applied it to your organization? Which felt least relevant — or hardest to apply? Write three sentences.</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">Good org design isn't about applying every framework. It's about knowing which lens is right for the problem in front of you. You're already starting to develop that instinct.</p></div>
+            <button class="complete-btn" id="btn-17" onclick="markComplete(17)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+
+        <div class="phase-header">Phase 3 — Branch &nbsp;·&nbsp; Days 18–24</div>
+
+        <div class="day-item" id="day-18">
+          <div class="day-header" onclick="toggleDay(18)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(18,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 18</span>
+            <span class="day-title">Follow the Root</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">You identified a recurring tension on Day 6. This week you're going to follow it deeper.</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Return to that tension. Now that you have the four lenses from Phase 2, what's actually producing it? Is it a structure problem, a decision rights problem, a coordination problem, or an incentives problem — or some combination? Write three sentences naming the root.</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">Most organizational problems have multiple contributing causes. The skill is identifying which one is load-bearing — the one that, if addressed, would let the others resolve.</p></div>
+            <button class="complete-btn" id="btn-18" onclick="markComplete(18)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+
+        <div class="day-item" id="day-19">
+          <div class="day-header" onclick="toggleDay(19)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(19,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 19</span>
+            <span class="day-title">Conditions, Not People</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">One of the most important shifts in org design thinking is moving from "people problems" to "conditions problems."</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Think about a behavior in your organization that frustrates people — something teams or individuals do that seems counterproductive. Now reframe it: what conditions would logically produce that behavior? What would the organization have to be rewarding, structuring, or incentivizing for that behavior to make sense?</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">If a behavior is widespread, it's almost never a character problem. It's a conditions problem. Organizations get the behavior their design produces.</p></div>
+            <button class="complete-btn" id="btn-19" onclick="markComplete(19)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+
+        <div class="day-item" id="day-20">
+          <div class="day-header" onclick="toggleDay(20)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(20,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 20</span>
+            <span class="day-title">What Would Have to Be True</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">A useful design question is not "how do we fix this?" but "what would have to be true for this to fix itself?"</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Take the root cause you identified on Day 18. What would have to change — structurally, in decision rights, in coordination, in incentives — for the tension to resolve without someone having to force it? Write one sentence for each lever that applies.</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">This question separates symptomatic fixes from structural ones. Symptomatic fixes treat the output. Structural fixes change what the system produces.</p></div>
+            <button class="complete-btn" id="btn-20" onclick="markComplete(20)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+
+        <div class="day-item" id="day-21">
+          <div class="day-header" onclick="toggleDay(21)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(21,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 21</span>
+            <span class="day-title">Who Benefits</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">This is the uncomfortable one. Every organizational problem has people who benefit from it staying unresolved — not maliciously, but structurally.</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Who in your organization benefits from the current state — even if they'd say they want it to change? What do they gain from the ambiguity, the friction, or the unresolved tension? Write two sentences. Be honest. This one stays in your canvas.</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">Change efforts fail most often not because people oppose them openly, but because the design still rewards the old behavior. Knowing who benefits tells you where the resistance will come from.</p></div>
+            <button class="complete-btn" id="btn-21" onclick="markComplete(21)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+      </div><!-- end week-3 -->
+
+      <!-- ── WEEK 4: Days 22–30 ──────────────────────────────── -->
+      <div class="week-anchor" id="week-4">
+        <div class="phase-header" style="margin-top:0;">Phase 3 continued &amp; Phase 4 begins</div>
+
+        <div class="day-item" id="day-22">
+          <div class="day-header" onclick="toggleDay(22)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(22,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 22</span>
+            <span class="day-title">One Lever</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">You've been observing and analyzing for three weeks. Today you make your first design move.</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">If you could change one thing — one structural element, one decision right, one coordination mechanism, one incentive — what would it be and why? Write three sentences: what you'd change, what you think it would shift, and what you're uncertain about.</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">Good org designers are comfortable making recommendations with incomplete information. The goal isn't certainty — it's a well-reasoned hypothesis you can test.</p></div>
+            <button class="complete-btn" id="btn-22" onclick="markComplete(22)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+
+        <div class="day-item" id="day-23">
+          <div class="day-header" onclick="toggleDay(23)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(23,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 23</span>
+            <span class="day-title">The 90-Second Version</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">The ability to explain an organizational problem clearly and concisely to a skeptical audience is a core practitioner skill.</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Imagine you have 90 seconds with a senior leader who is skeptical but open. What would you say? Write it out in full sentences — the problem, why it persists, and what you'd do about it. Read it back. Is it clear to someone who hasn't been thinking about this for three weeks?</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">If you can't say it in 90 seconds, you don't understand it well enough yet. Clarity of expression is a proxy for clarity of thought.</p></div>
+            <button class="complete-btn" id="btn-23" onclick="markComplete(23)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+
+        <div class="day-item" id="day-24">
+          <div class="day-header" onclick="toggleDay(24)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(24,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 24</span>
+            <span class="day-title">Three Sentences</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">You're almost ready to write your diagnosis. Today is the last preparation step.</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Write exactly three sentences: (1) What is the tension or problem? (2) Why does it persist — what in the design sustains it? (3) What is one lever that would shift the conditions? This is the spine of your one-pager.</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">These three sentences are the core of every good OD recommendation. Everything else — context, evidence, caveats — is in service of these three.</p></div>
+            <button class="complete-btn" id="btn-24" onclick="markComplete(24)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+
+        <div class="phase-header">Phase 4 — Bloom &nbsp;·&nbsp; Days 25–30</div>
+
+        <div class="day-item" id="day-25">
+          <div class="day-header" onclick="toggleDay(25)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(25,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 25</span>
+            <span class="day-title">Name the Organization</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">Your one-page diagnosis starts here. Today is just the first sentence.</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Write one clear sentence that names the organization (or team) and the challenge. Not the symptom — the challenge. Example: "Finch &amp; Co. is a fast-growing 80-person company where decision-making authority has not kept pace with organizational complexity." Your turn.</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">The first sentence of a diagnosis is the hardest. It has to be specific enough to be true and general enough to hold everything that follows.</p></div>
+            <button class="complete-btn" id="btn-25" onclick="markComplete(25)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+
+        <div class="day-item" id="day-26">
+          <div class="day-header" onclick="toggleDay(26)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(26,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 26</span>
+            <span class="day-title">Describe the Conditions</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">Now describe what you found across the four lenses.</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Write two to three sentences on each lens that's relevant to your diagnosis: structure, decision rights, coordination, incentives. Not all four will apply equally — weight them honestly. This is the evidence section of your one-pager.</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">Conditions descriptions are not complaints. They're observations about what the design is producing. Neutral, specific, and grounded in what you actually observed.</p></div>
+            <button class="complete-btn" id="btn-26" onclick="markComplete(26)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+
+        <div class="day-item" id="day-27">
+          <div class="day-header" onclick="toggleDay(27)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(27,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 27</span>
+            <span class="day-title">Symptoms vs. Causes</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">A diagnosis distinguishes between what people experience and what's producing the experience.</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">List two or three symptoms — what people in this organization complain about or struggle with. Then, for each one, write the underlying cause you've identified. The symptom is what's visible. The cause is what your four-lens analysis revealed.</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">Treating symptoms without addressing causes is the most common failure mode in organizational change. Your diagnosis is valuable because it goes one level deeper.</p></div>
+            <button class="complete-btn" id="btn-27" onclick="markComplete(27)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+
+        <div class="day-item" id="day-28">
+          <div class="day-header" onclick="toggleDay(28)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(28,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 28</span>
+            <span class="day-title">The Recommendation</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">One change. Well-reasoned. Honest about uncertainty.</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Write your recommendation in three sentences: what you'd change, what you believe it would shift, and what you're still uncertain about. Refer back to Day 22. You've had a week to sit with it — has your thinking changed?</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">A good recommendation is not a plan. It's a hypothesis. The best org designers hold their recommendations lightly and update them when they learn more.</p></div>
+            <button class="complete-btn" id="btn-28" onclick="markComplete(28)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+
+        <div class="day-item" id="day-29">
+          <div class="day-header" onclick="toggleDay(29)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(29,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 29</span>
+            <span class="day-title">Anticipate the Resistance</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">Every recommendation lands in a political context. Knowing where the resistance will come from is part of the design work.</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Who would push back on your recommendation, and why? Not who you'd expect to be difficult — who has a legitimate reason to be cautious or skeptical? Write two sentences for each person or group. Then write one sentence on how you'd address their concern.</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">Anticipating resistance isn't about winning arguments. It's about designing change that accounts for the real system — including the people in it.</p></div>
+            <button class="complete-btn" id="btn-29" onclick="markComplete(29)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+
+        <div class="day-item" id="day-30">
+          <div class="day-header" onclick="toggleDay(30)">
+            <label class="day-check" onclick="event.stopPropagation()"><input type="checkbox" onchange="handleCheck(30,this.checked)"><span class="checkmark"></span></label>
+            <span class="day-num-label">Day 30</span>
+            <span class="day-title">Write the One-Pager</span>
+            <span class="chevron">›</span>
+          </div>
+          <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
+            <p class="day-intro">You've done the work. Everything you need is already in your canvas. Today you assemble it.</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Write your one-page org diagnosis. Use everything from Days 25–29 as your raw material. It should have: one opening sentence naming the organization and challenge, a conditions section (what the design is producing), a symptoms vs. causes section, a recommendation, and one sentence on what you're watching for. Read it back. Would a thoughtful colleague understand the problem and your reasoning without any additional context?</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">You just did what org designers get paid to do. You observed an organization, applied a diagnostic framework, identified root causes, and made a recommendation. That's the work. You've been doing it for 30 days.</p></div>
+            <button class="complete-btn" id="btn-30" onclick="markComplete(30)">Mark Day Complete</button>
+          </div></div></div>
+        </div>
+      </div><!-- end week-4 -->
+
+    </section><!-- end 30 days -->
+
+  </main><!-- end main-content -->
+
+  <!-- ─── GARDEN PANEL (Desktop Sticky) ────────────────────── -->
+  <aside class="garden-panel" aria-hidden="true">
+    <svg class="garden-svg" viewBox="0 0 220 330" xmlns="http://www.w3.org/2000/svg">
+      <g class="garden-pot">
+        <rect x="40" y="216" width="140" height="18" rx="5" fill="#B05525"/>
+        <path d="M 50 234 L 170 234 L 154 308 L 66 308 Z" fill="#C4622D"/>
+        <path d="M 50 234 L 74 234 L 70 308 L 66 308 Z" fill="#CF7040" opacity="0.35"/>
+      </g>
+      <ellipse class="garden-soil" cx="110" cy="227" rx="56" ry="12" fill="#2C1810"/>
+      <g class="garden-element garden-seedling">
+        <line x1="110" y1="224" x2="110" y2="195" stroke="#527A55" stroke-width="3" stroke-linecap="round"/>
+        <path d="M 109 210 C 100 202 87 205 90 213 C 92 219 107 215 109 210" fill="#7A9E7E"/>
+        <path d="M 111 210 C 120 202 133 205 130 213 C 128 219 113 215 111 210" fill="#6B9070"/>
+        <circle cx="110" cy="194" r="3.5" fill="#8AB08E"/>
+      </g>
+      <g class="garden-element garden-stem">
+        <line x1="110" y1="226" x2="110" y2="133" stroke="#527A55" stroke-width="3.5" stroke-linecap="round"/>
+      </g>
+      <g class="garden-element garden-leaves-small">
+        <path d="M 109 188 C 97 179 80 182 84 194 C 87 203 107 196 109 188" fill="#7A9E7E"/>
+        <path d="M 111 188 C 123 179 140 182 136 194 C 133 203 113 196 111 188" fill="#6B9070"/>
+      </g>
+      <g class="garden-element garden-leaves-large">
+        <path d="M 108 165 C 92 154 70 158 75 172 C 79 183 107 173 108 165" fill="#7A9E7E"/>
+        <path d="M 112 165 C 128 154 150 158 145 172 C 141 183 113 173 112 165" fill="#6B9070"/>
+      </g>
+      <g class="garden-element garden-branch-left">
+        <path d="M 109 155 Q 87 142 72 122" stroke="#527A55" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path d="M 69 119 C 58 110 61 97 71 99 C 81 101 78 116 69 119" fill="#7A9E7E"/>
+      </g>
+      <g class="garden-element garden-branch-right">
+        <path d="M 111 155 Q 133 142 148 122" stroke="#527A55" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path d="M 151 119 C 162 110 159 97 149 99 C 139 101 142 116 151 119" fill="#6B9070"/>
+      </g>
+      <g class="garden-element garden-buds">
+        <ellipse cx="110" cy="138" rx="6" ry="9" fill="#A8C5AB"/>
+        <ellipse cx="110" cy="134" rx="4" ry="5.5" fill="#C4DFC8"/>
+        <ellipse cx="71" cy="114" rx="5" ry="7.5" fill="#A8C5AB"/>
+        <ellipse cx="71" cy="111" rx="3.5" ry="4.5" fill="#C4DFC8"/>
+        <ellipse cx="149" cy="114" rx="5" ry="7.5" fill="#A8C5AB"/>
+        <ellipse cx="149" cy="111" rx="3.5" ry="4.5" fill="#C4DFC8"/>
+      </g>
+      <g class="garden-element garden-bloom-1">
+        <circle cx="110" cy="121" r="8.5" fill="#F5E6D3"/>
+        <circle cx="123" cy="127" r="8.5" fill="#F0D4BD"/>
+        <circle cx="123" cy="141" r="8.5" fill="#F5E6D3"/>
+        <circle cx="110" cy="147" r="8.5" fill="#F0D4BD"/>
+        <circle cx="97"  cy="141" r="8.5" fill="#F5E6D3"/>
+        <circle cx="97"  cy="127" r="8.5" fill="#F0D4BD"/>
+        <circle cx="110" cy="134" r="11"  fill="#C4622D"/>
+        <circle cx="110" cy="134" r="5"   fill="#D4773A"/>
+      </g>
+      <g class="garden-element garden-bloom-2">
+        <circle cx="71" cy="100" r="6.5" fill="#F5E6D3"/>
+        <circle cx="81" cy="105" r="6.5" fill="#F0D4BD"/>
+        <circle cx="81" cy="116" r="6.5" fill="#F5E6D3"/>
+        <circle cx="71" cy="121" r="6.5" fill="#F0D4BD"/>
+        <circle cx="61" cy="116" r="6.5" fill="#F5E6D3"/>
+        <circle cx="61" cy="105" r="6.5" fill="#F0D4BD"/>
+        <circle cx="71" cy="110" r="8.5" fill="#C4622D"/>
+        <circle cx="71" cy="110" r="4"   fill="#D4773A"/>
+      </g>
+      <g class="garden-element garden-bloom-3">
+        <circle cx="149" cy="100" r="6.5" fill="#F5E6D3"/>
+        <circle cx="159" cy="105" r="6.5" fill="#F0D4BD"/>
+        <circle cx="159" cy="116" r="6.5" fill="#F5E6D3"/>
+        <circle cx="149" cy="121" r="6.5" fill="#F0D4BD"/>
+        <circle cx="139" cy="116" r="6.5" fill="#F5E6D3"/>
+        <circle cx="139" cy="105" r="6.5" fill="#F0D4BD"/>
+        <circle cx="149" cy="110" r="8.5" fill="#C4622D"/>
+        <circle cx="149" cy="110" r="4"   fill="#D4773A"/>
+      </g>
+    </svg>
+    <div class="garden-count" id="count-desktop">0 days complete</div>
+  </aside>
+
+</div><!-- end page-layout -->
+
+<!-- ═══ FOOTER ════════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-inner">
+
+    <!-- ╔══════════════════════════════════════════════════╗ -->
+    <!-- ║  BEEHIIV FOOTER EMBED                            ║ -->
+    <!-- ║  Replace this block with your Beehiiv embed for  ║ -->
+    <!-- ║  people who want the newsletter without the      ║ -->
+    <!-- ║  full program signup                             ║ -->
+    <!-- ╚══════════════════════════════════════════════════╝ -->
+    <div class="footer-newsletter">
+      <h3>Get the weekly OD newsletter</h3>
+      <p>Short, practical organization design thinking. No jargon. No case studies you can't use.</p>
+      <div id="footer-form-wrap">
+        <form id="footer-form" onsubmit="handleEmailSubmit(event,'footer')">
+          <div class="email-row">
+            <input type="email" id="footer-email" placeholder="Your email address" required>
+            <button type="submit">Subscribe</button>
+          </div>
+        </form>
+        <div class="email-success" id="footer-success">You're in. First issue on its way.</div>
+      </div>
+    </div>
+    <!-- ╔══════════════════════════════════════════════════╗ -->
+    <!-- ║  END BEEHIIV FOOTER EMBED                        ║ -->
+    <!-- ╚══════════════════════════════════════════════════╝ -->
+
+    <div class="footer-links">
+      <a href="#" target="_blank" rel="noopener"><!-- ADD ENHRGY URL -->EnHRgy</a>
+      <a href="#" target="_blank" rel="noopener"><!-- ADD NEWSLETTER URL -->Newsletter</a>
+      <a href="#" target="_blank" rel="noopener"><!-- ADD PRIVACY URL -->Privacy Policy</a>
+    </div>
+    <p class="footer-copy">&copy; <span id="footer-year"></span> Megan Heddon / EnHRgy. All rights reserved.</p>
+  </div>
+</footer>
+
+<!-- ═══ JAVASCRIPT ════════════════════════════════════════════ -->
+<script>
+
+  /* ─── State ─────────────────────────────────────────────── */
+  const STORAGE_KEY = 'c5k-od-progress';
+  let progress = (() => {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    } catch (e) { return {}; }
+  })();
+  if (!Array.isArray(progress.completedDays)) progress.completedDays = [];
+
+  /* ─── Garden Stage Logic ────────────────────────────────── */
+  function getGardenStage(n) {
+    if (n === 0)  return 0;
+    if (n <= 5)   return 1;
+    if (n <= 10)  return 2;
+    if (n <= 17)  return 3;
+    if (n <= 24)  return 4;
+    if (n <= 29)  return 5;
+    return 6;
+  }
+
+  const STAGE_CLASSES = [
+    [],
+    ['garden-seedling'],
+    ['garden-seedling','garden-stem','garden-leaves-small'],
+    ['garden-seedling','garden-stem','garden-leaves-small','garden-leaves-large','garden-branch-left','garden-branch-right'],
+    ['garden-seedling','garden-stem','garden-leaves-small','garden-leaves-large','garden-branch-left','garden-branch-right','garden-buds'],
+    ['garden-seedling','garden-stem','garden-leaves-small','garden-leaves-large','garden-branch-left','garden-branch-right','garden-buds','garden-bloom-1'],
+    ['garden-seedling','garden-stem','garden-leaves-small','garden-leaves-large','garden-branch-left','garden-branch-right','garden-buds','garden-bloom-1','garden-bloom-2','garden-bloom-3']
+  ];
+
+  const ALL_PLANT_CLASSES = ['garden-seedling','garden-stem','garden-leaves-small','garden-leaves-large','garden-branch-left','garden-branch-right','garden-buds','garden-bloom-1','garden-bloom-2','garden-bloom-3'];
+
+  function updateGarden(count) {
+    const stage = getGardenStage(count);
+    const visible = STAGE_CLASSES[stage];
+    ALL_PLANT_CLASSES.forEach(cls => {
+      document.querySelectorAll('.' + cls).forEach(el => {
+        el.classList.toggle('visible', visible.includes(cls));
+      });
+    });
+    const label = count === 1 ? '1 day complete' : count + ' days complete';
+    document.querySelectorAll('.garden-count').forEach(el => el.textContent = label);
+  }
+
+  /* ─── Mark Day Complete ─────────────────────────────────── */
+  function markComplete(dayNum) {
+    if (!progress.completedDays.includes(dayNum)) {
+      progress.completedDays.push(dayNum);
+      saveProgress();
+    }
+    applyDayUI(dayNum, true);
+    updateGarden(progress.completedDays.length);
+  }
+
+  function applyDayUI(dayNum, complete) {
+    const item = document.getElementById('day-' + dayNum);
+    const btn  = document.getElementById('btn-' + dayNum);
+    const chk  = item && item.querySelector('input[type="checkbox"]');
+    if (!item) return;
+    item.classList.toggle('completed', complete);
+    if (chk) chk.checked = complete;
+    if (btn) {
+      if (complete) {
+        btn.textContent = '✓ Day Complete';
+        btn.classList.add('done');
+      } else {
+        btn.textContent = 'Mark Day Complete';
+        btn.classList.remove('done');
+      }
+    }
+    if (complete && btn) {
+      btn.classList.add('blooming');
+      btn.addEventListener('animationend', () => btn.classList.remove('blooming'), { once: true });
+    }
+  }
+
+  /* ─── Unmark (via checkbox) ─────────────────────────────── */
+  function handleCheck(dayNum, checked) {
+    if (checked) {
+      markComplete(dayNum);
+    } else {
+      progress.completedDays = progress.completedDays.filter(d => d !== dayNum);
+      saveProgress();
+      applyDayUI(dayNum, false);
+      updateGarden(progress.completedDays.length);
+    }
+  }
+
+  /* ─── Accordion ─────────────────────────────────────────── */
+  function toggleDay(dayNum) {
+    const item = document.getElementById('day-' + dayNum);
+    if (item) item.classList.toggle('open');
+  }
+
+  /* ─── Week Tabs ─────────────────────────────────────────── */
+  function jumpToWeek(num) {
+    document.querySelectorAll('.week-tab').forEach(t => {
+      t.classList.toggle('active', t.dataset.week === String(num));
+      t.setAttribute('aria-selected', t.dataset.week === String(num));
+    });
+    const target = document.getElementById('week-' + num);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  /* Use IntersectionObserver to highlight active week tab on scroll */
+  function initWeekObserver() {
+    if (!('IntersectionObserver' in window)) return;
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const w = entry.target.id.replace('week-', '');
+          document.querySelectorAll('.week-tab').forEach(t => {
+            t.classList.toggle('active', t.dataset.week === w);
+            t.setAttribute('aria-selected', t.dataset.week === w);
+          });
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    [1,2,3,4].forEach(n => {
+      const el = document.getElementById('week-' + n);
+      if (el) obs.observe(el);
+    });
+  }
+
+  /* ─── Commitment / ICS ──────────────────────────────────── */
+  function handleCommitment(e) {
+    e.preventDefault();
+    const venue = document.getElementById('venue').value.trim();
+    const date  = document.getElementById('commit-date').value;
+    if (!venue || !date) {
+      alert('Please fill in both fields before committing.');
+      return;
+    }
+    progress.commitmentVenue = venue;
+    progress.commitmentDate  = date;
+    saveProgress();
+    generateICS(date, venue);
+    document.getElementById('commit-success').classList.add('show');
+  }
+
+  function generateICS(date, venue) {
+    const d = date.replace(/-/g, '');
+    const safeVenue = venue.replace(/[,\\]/g, ' ');
+    const ics = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Couch to 5K Org Design//EN',
+      'BEGIN:VEVENT',
+      'DTSTART;VALUE=DATE:' + d,
+      'DTEND;VALUE=DATE:' + d,
+      'SUMMARY:Share my org diagnosis',
+      'DESCRIPTION:The finish line for Couch to 5K: Org Design. Share your one-page diagnosis at: ' + safeVenue,
+      'LOCATION:' + safeVenue,
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join('\r\n');
+    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = 'org-diagnosis-date.ics';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  /* ─── Email Form (placeholder) ──────────────────────────── */
+  function handleEmailSubmit(e, location) {
+    e.preventDefault();
+    /* When you replace with Beehiiv embed, this function becomes unused.
+       For now, show a success state so the placeholder is functional. */
+    const successEl = document.getElementById(location + '-success');
+    const formEl    = document.getElementById(location + '-form');
+    if (formEl) formEl.style.display = 'none';
+    if (successEl) successEl.classList.add('show');
+  }
+
+  /* ─── Persistence ───────────────────────────────────────── */
+  function saveProgress() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(progress)); } catch(e) {}
+  }
+
+  /* ─── Init ──────────────────────────────────────────────── */
+  function init() {
+    // Footer year
+    const yearEl = document.getElementById('footer-year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+    // Restore completed days
+    progress.completedDays.forEach(n => applyDayUI(n, true));
+    updateGarden(progress.completedDays.length);
+
+    // Restore commitment fields
+    if (progress.commitmentVenue) {
+      const v = document.getElementById('venue');
+      if (v) v.value = progress.commitmentVenue;
+    }
+    if (progress.commitmentDate) {
+      const d = document.getElementById('commit-date');
+      if (d) d.value = progress.commitmentDate;
+    }
+
+    initWeekObserver();
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+
+</script>
+</body>
+</html>

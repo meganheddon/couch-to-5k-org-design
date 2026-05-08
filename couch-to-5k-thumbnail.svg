@@ -1,0 +1,20 @@
+<svg viewBox="0 0 1200 630" width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#F7F4EF"/>
+  <rect x="0" y="0" width="7" height="630" fill="#C49A2A"/>
+  <text x="90" y="150" font-family="'Helvetica Neue', Arial, sans-serif" font-size="18" letter-spacing="4" fill="#888888">A FREE 30-DAY PROGRAM</text>
+  <text x="90" y="270" font-family="Georgia, 'Times New Roman', serif" font-size="90" fill="#1E1E1E">Couch to 5K:</text>
+  <text x="90" y="368" font-family="Georgia, 'Times New Roman', serif" font-size="78" fill="#C49A2A">Org Design</text>
+  <line x1="90" y1="425" x2="660" y2="425" stroke="#CCBBAA" stroke-width="1"/>
+  <text x="90" y="488" font-family="Georgia, 'Times New Roman', serif" font-size="30">
+    <tspan fill="#1E1E1E">en</tspan><tspan fill="#C49A2A">HR</tspan><tspan fill="#1E1E1E">gy</tspan>
+  </text>
+  <text x="90" y="522" font-family="'Helvetica Neue', Arial, sans-serif" font-size="15" letter-spacing="3.5" fill="#999999">CONSULTING</text>
+  <line x1="1020" y1="80" x2="1020" y2="560" stroke="#567040" stroke-width="1.5"/>
+  <circle cx="1020" cy="78" r="9" fill="#C49A2A"/>
+  <ellipse cx="1004" cy="152" rx="5" ry="17" transform="rotate(-35, 1004, 152)" fill="#567040"/>
+  <ellipse cx="1036" cy="222" rx="5" ry="17" transform="rotate(35, 1036, 222)" fill="#567040"/>
+  <ellipse cx="1004" cy="292" rx="5" ry="17" transform="rotate(-35, 1004, 292)" fill="#567040"/>
+  <ellipse cx="1036" cy="362" rx="5" ry="17" transform="rotate(35, 1036, 362)" fill="#567040"/>
+  <ellipse cx="1004" cy="432" rx="5" ry="17" transform="rotate(-35, 1004, 432)" fill="#567040"/>
+  <ellipse cx="1036" cy="502" rx="5" ry="17" transform="rotate(35, 1036, 502)" fill="#567040"/>
+</svg>

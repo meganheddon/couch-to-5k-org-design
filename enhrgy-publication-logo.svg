@@ -1,0 +1,14 @@
+<svg viewBox="0 0 400 400" width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="400" fill="#FFFFFF"/>
+  <g transform="translate(200, 160)">
+    <path d="M0,0 C4,-10 4,-28 0,-32 C-4,-28 -4,-10 0,0Z" fill="#567040"/>
+    <g transform="rotate(-22)"><path d="M0,0 C4,-10 4,-28 0,-32 C-4,-28 -4,-10 0,0Z" fill="#567040"/></g>
+    <g transform="rotate(-44)"><path d="M0,0 C3,-8 3,-24 0,-27 C-3,-24 -3,-8 0,0Z" fill="#567040" opacity="0.85"/></g>
+    <g transform="rotate(22)"><path d="M0,0 C4,-10 4,-28 0,-32 C-4,-28 -4,-10 0,0Z" fill="#567040"/></g>
+    <g transform="rotate(44)"><path d="M0,0 C3,-8 3,-24 0,-27 C-3,-24 -3,-8 0,0Z" fill="#567040" opacity="0.85"/></g>
+  </g>
+  <text x="200" y="217" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="70">
+    <tspan fill="#1E1E1E">en</tspan><tspan fill="#C49A2A">HR</tspan><tspan fill="#1E1E1E">gy</tspan>
+  </text>
+  <text x="200" y="250" text-anchor="middle" font-family="'Helvetica Neue', Arial, sans-serif" font-size="13" letter-spacing="6" fill="#999999">CONSULTING</text>
+</svg>
