@@ -167,26 +167,24 @@
     }
 
     /* Hero Calendar CTA */
-    .hero-cal { max-width: 560px; }
+    .hero-cal { max-width: 480px; }
 
-    .cal-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 12px;
+    .cal-field {
+      margin-bottom: 16px;
     }
 
     .cal-label {
+      display: block;
       font-family: var(--font-mono);
-      font-size: 12px;
+      font-size: 11px;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.12em;
       color: var(--muted);
-      white-space: nowrap;
+      margin-bottom: 8px;
     }
 
-    .cal-row input[type="date"] {
+    .cal-field input[type="text"] {
+      width: 100%;
       padding: 12px 16px;
       border: 1.5px solid var(--border);
       border-radius: 4px;
@@ -194,22 +192,37 @@
       color: var(--text);
       font-family: var(--font-body);
       font-size: 16px;
+      transition: border-color 0.2s;
     }
 
-    .cal-row input[type="date"]:focus {
+    .cal-field input[type="text"]:focus {
       outline: none;
       border-color: var(--accent);
     }
 
+    .cal-date-display {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .cal-date-range {
+      font-size: 16px;
+      color: var(--text);
+      font-family: var(--font-body);
+    }
+
     .cal-btn {
-      padding: 12px 24px;
+      padding: 13px 28px;
       background: var(--accent);
       color: #fff;
       font-weight: 600;
-      font-size: 15px;
+      font-size: 16px;
       border-radius: 4px;
       white-space: nowrap;
       transition: background 0.2s;
+      margin-bottom: 12px;
     }
 
     .cal-btn:hover { background: var(--accent-dark); }
@@ -244,71 +257,6 @@
     }
     .wyb-body p:last-child { margin-bottom: 0; }
 
-    /* ─── Commitment ─────────────────────────────────────────── */
-    .commitment-form {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      max-width: 440px;
-    }
-
-    .field label {
-      display: block;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--muted);
-      margin-bottom: 6px;
-    }
-
-    .field input {
-      width: 100%;
-      padding: 12px 16px;
-      border: 1.5px solid var(--border);
-      border-radius: 4px;
-      background: #fff;
-      color: var(--text);
-      transition: border-color 0.2s;
-    }
-
-    .field input:focus {
-      outline: none;
-      border-color: var(--accent);
-    }
-
-    .commit-btn {
-      align-self: flex-start;
-      padding: 13px 28px;
-      background: var(--accent);
-      color: #fff;
-      font-weight: 600;
-      font-size: 16px;
-      border-radius: 4px;
-      transition: background 0.2s, transform 0.1s;
-    }
-
-    .commit-btn:hover { background: var(--accent-dark); }
-    .commit-btn:active { transform: scale(0.98); }
-
-    .commit-note {
-      font-size: 13px;
-      color: var(--muted);
-      font-style: italic;
-    }
-
-    .commit-success {
-      display: none;
-      margin-top: 4px;
-      padding: 14px 18px;
-      background: var(--complete-bg);
-      border: 1px solid var(--green);
-      border-radius: 4px;
-      color: var(--moss);
-      font-size: 15px;
-    }
-
-    .commit-success.show { display: block; }
 
     /* ─── Phase Cards ────────────────────────────────────────── */
     .phases-grid {
@@ -684,7 +632,6 @@
 
       .hero-title { font-size: 38px; }
 
-      .cal-row { flex-direction: column; align-items: flex-start; }
       .cal-btn { width: 100%; text-align: center; }
     }
 
@@ -711,13 +658,17 @@
 
       <div class="hero-cal">
         <form id="cal-form" onsubmit="handleAddToCalendar(event)">
-          <div class="cal-row">
-            <label for="cal-start" class="cal-label">Start date</label>
-            <input type="date" id="cal-start" required>
-            <button type="submit" class="cal-btn">Add 30 days to my calendar</button>
+          <div class="cal-field">
+            <label for="cal-venue" class="cal-label">Where will you share your diagnosis?</label>
+            <input type="text" id="cal-venue" placeholder="e.g. Monthly team all-hands" autocomplete="off">
           </div>
+          <div class="cal-date-display">
+            <span class="cal-label">Your 30 days</span>
+            <span class="cal-date-range" id="cal-date-range">—</span>
+          </div>
+          <button type="submit" class="cal-btn">Add to my calendar</button>
         </form>
-        <p class="cal-note">Downloads a .ics file with all 30 daily prompts — open it to add to Apple Calendar, Google Calendar, or Outlook.</p>
+        <p class="cal-note">Downloads a .ics file with all 30 daily prompts and a Day 30 reminder to share your diagnosis — open it to add to Apple Calendar, Google Calendar, or Outlook.</p>
       </div>
     </section>
 
@@ -807,24 +758,6 @@
       </div>
     </section>
 
-    <!-- ═══ COMMITMENT ════════════════════════════════════════ -->
-    <section class="section-pad">
-      <h2 class="section-heading">Lock in your diagnosis date</h2>
-      <p class="section-sub">Pick a meeting or conversation where you'll share what you find. It could be a team all-hands, a 1:1 with your manager, or a peer debrief. Writing it down makes it real.</p>
-      <form class="commitment-form" id="commitment-form" onsubmit="handleCommitment(event)">
-        <div class="field">
-          <label for="venue">Where will you share it?</label>
-          <input type="text" id="venue" placeholder="e.g. Monthly team all-hands">
-        </div>
-        <div class="field">
-          <label for="commit-date">Date</label>
-          <input type="date" id="commit-date">
-        </div>
-        <button type="submit" class="commit-btn">Commit</button>
-        <p class="commit-note">Optional, but the research on commitment devices is clear.</p>
-      </form>
-      <div class="commit-success" id="commit-success">✓ Calendar file downloaded. See you on the other side.</div>
-    </section>
 
     <!-- ═══ FOUR PHASES ════════════════════════════════════════ -->
     <section class="section-pad">
@@ -1613,22 +1546,20 @@
   /* ─── Hero Calendar CTA ─────────────────────────────────── */
   function handleAddToCalendar(e) {
     e.preventDefault();
-    const date = document.getElementById('cal-start').value;
-    if (!date) return;
-    generateCalendarICS(date);
+    const venue = document.getElementById('cal-venue').value.trim();
+    generateCalendarICS(new Date(), venue);
   }
 
-  function generateCalendarICS(startDateStr) {
+  function generateCalendarICS(startDate, venue) {
     const SITE_URL = window.location.origin + window.location.pathname;
     const esc = s => s.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
-    const [y, m, d] = startDateStr.split('-').map(Number);
+    const fmt = dt => String(dt.getFullYear()) + String(dt.getMonth() + 1).padStart(2, '0') + String(dt.getDate()).padStart(2, '0');
 
     const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Couch to 5K Org Design//EN'];
 
     DAYS.forEach((day, i) => {
-      const start = new Date(y, m - 1, d + i);
-      const end   = new Date(y, m - 1, d + i + 1);
-      const fmt   = dt => String(dt.getFullYear()) + String(dt.getMonth() + 1).padStart(2, '0') + String(dt.getDate()).padStart(2, '0');
+      const start = new Date(startDate); start.setDate(startDate.getDate() + i);
+      const end   = new Date(startDate); end.setDate(startDate.getDate() + i + 1);
       lines.push(
         'BEGIN:VEVENT',
         'DTSTART;VALUE=DATE:' + fmt(start),
@@ -1638,6 +1569,21 @@
         'END:VEVENT'
       );
     });
+
+    // Commitment event on Day 30
+    const commitDay  = new Date(startDate); commitDay.setDate(startDate.getDate() + 29);
+    const commitNext = new Date(startDate); commitNext.setDate(startDate.getDate() + 30);
+    const venueLine  = venue || 'your chosen venue';
+    const commitLines = [
+      'BEGIN:VEVENT',
+      'DTSTART;VALUE=DATE:' + fmt(commitDay),
+      'DTEND;VALUE=DATE:'   + fmt(commitNext),
+      'SUMMARY:Share your org diagnosis',
+      'DESCRIPTION:You committed to sharing your one-page diagnosis at ' + esc(venueLine) + '. This is the finish line for Couch to 5K\\: Org Design.',
+      'END:VEVENT'
+    ];
+    if (venue) commitLines.splice(-1, 0, 'LOCATION:' + esc(venue));
+    lines.push(...commitLines);
 
     lines.push('END:VCALENDAR');
 
@@ -1653,47 +1599,6 @@
   }
 
   /* ─── Commitment / ICS ──────────────────────────────────── */
-  function handleCommitment(e) {
-    e.preventDefault();
-    const venue = document.getElementById('venue').value.trim();
-    const date  = document.getElementById('commit-date').value;
-    if (!venue || !date) {
-      alert('Please fill in both fields before committing.');
-      return;
-    }
-    progress.commitmentVenue = venue;
-    progress.commitmentDate  = date;
-    saveProgress();
-    generateCommitmentICS(date, venue);
-    document.getElementById('commit-success').classList.add('show');
-  }
-
-  function generateCommitmentICS(date, venue) {
-    const d = date.replace(/-/g, '');
-    const safeVenue = venue.replace(/[,\\]/g, ' ');
-    const ics = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'PRODID:-//Couch to 5K Org Design//EN',
-      'BEGIN:VEVENT',
-      'DTSTART;VALUE=DATE:' + d,
-      'DTEND;VALUE=DATE:' + d,
-      'SUMMARY:Share my org diagnosis',
-      'DESCRIPTION:The finish line for Couch to 5K\\: Org Design. Share your one-page diagnosis at: ' + safeVenue,
-      'LOCATION:' + safeVenue,
-      'END:VEVENT',
-      'END:VCALENDAR'
-    ].join('\r\n');
-    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href     = url;
-    a.download = 'org-diagnosis-date.ics';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }
 
   /* ─── Persistence ───────────────────────────────────────── */
   function saveProgress() {
@@ -1710,15 +1615,12 @@
     progress.completedDays.forEach(n => applyDayUI(n, true));
     updateGarden(progress.completedDays.length);
 
-    // Restore commitment fields
-    if (progress.commitmentVenue) {
-      const v = document.getElementById('venue');
-      if (v) v.value = progress.commitmentVenue;
-    }
-    if (progress.commitmentDate) {
-      const d = document.getElementById('commit-date');
-      if (d) d.value = progress.commitmentDate;
-    }
+    // Populate auto-calculated date range in hero
+    const today  = new Date();
+    const end30  = new Date(); end30.setDate(today.getDate() + 29);
+    const fmtDisplay = d => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    const rangeEl = document.getElementById('cal-date-range');
+    if (rangeEl) rangeEl.textContent = fmtDisplay(today) + ' → ' + fmtDisplay(end30);
 
     initWeekObserver();
   }
