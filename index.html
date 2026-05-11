@@ -166,62 +166,65 @@
       max-width: 460px;
     }
 
-    /* Email Form (Beehiiv placeholder) */
-    .email-form { max-width: 580px; }
+    /* Hero Calendar CTA */
+    .hero-cal { max-width: 560px; }
 
-    .email-row {
+    .cal-row {
       display: flex;
-      border: 1.5px solid var(--border);
-      border-radius: 6px;
-      overflow: hidden;
-      background: #fff;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
       margin-bottom: 12px;
     }
 
-    .email-row input[type="email"] {
-      flex: 1;
-      padding: 14px 18px;
-      border: none;
-      outline: none;
-      background: transparent;
+    .cal-label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .cal-row input[type="date"] {
+      padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 4px;
+      background: #fff;
       color: var(--text);
+      font-family: var(--font-body);
       font-size: 16px;
     }
 
-    .email-row input[type="email"]::placeholder { color: #C0B8B0; }
+    .cal-row input[type="date"]:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
 
-    .email-row button {
-      padding: 14px 20px;
+    .cal-btn {
+      padding: 12px 24px;
       background: var(--accent);
       color: #fff;
       font-weight: 600;
       font-size: 15px;
+      border-radius: 4px;
       white-space: nowrap;
-      border-radius: 0;
       transition: background 0.2s;
-      line-height: 1.3;
     }
 
-    .email-row button:hover { background: var(--accent-dark); }
+    .cal-btn:hover { background: var(--accent-dark); }
 
-    .email-note {
+    .cal-note {
       font-size: 13px;
       color: var(--muted);
       line-height: 1.5;
     }
 
-    .email-success {
-      display: none;
-      padding: 14px 18px;
-      background: var(--complete-bg);
-      border: 1px solid var(--green);
-      border-radius: 6px;
-      color: var(--moss);
-      font-size: 15px;
-      line-height: 1.5;
+    /* Substack embed wrapper */
+    .substack-wrap iframe {
+      max-width: 100%;
+      display: block;
     }
-
-    .email-success.show { display: block; }
 
     /* ─── Mobile Garden ──────────────────────────────────────── */
     .garden-mobile {
@@ -681,8 +684,8 @@
 
       .hero-title { font-size: 38px; }
 
-      .email-row { flex-direction: column; }
-      .email-row button { border-radius: 0 0 4px 4px; text-align: center; }
+      .cal-row { flex-direction: column; align-items: flex-start; }
+      .cal-btn { width: 100%; text-align: center; }
     }
 
     @media (max-width: 520px) {
@@ -706,24 +709,16 @@
       <p class="hero-tagline">30 days. 10 minutes a day. Learn to see your organization the way a designer does.</p>
       <p class="hero-sub">No prior experience required. Just bring the organization you already work inside.</p>
 
-      <!-- ╔══════════════════════════════════════════════════╗ -->
-      <!-- ║  BEEHIIV HERO EMBED                              ║ -->
-      <!-- ║  Replace this entire block with your Beehiiv    ║ -->
-      <!-- ║  embed code from Publication Settings > Embeds  ║ -->
-      <!-- ╚══════════════════════════════════════════════════╝ -->
-      <div class="email-form" id="hero-form-wrap">
-        <form id="hero-form" onsubmit="handleEmailSubmit(event,'hero')">
-          <div class="email-row">
-            <input type="email" id="hero-email" placeholder="Your email address" required>
-            <button type="submit">Start the program — get your free canvas</button>
+      <div class="hero-cal">
+        <form id="cal-form" onsubmit="handleAddToCalendar(event)">
+          <div class="cal-row">
+            <label for="cal-start" class="cal-label">Start date</label>
+            <input type="date" id="cal-start" required>
+            <button type="submit" class="cal-btn">Add 30 days to my calendar</button>
           </div>
         </form>
-        <p class="email-note">You'll receive the OD Canvas download and your first day's prompt by email.</p>
-        <div class="email-success" id="hero-success">Check your email — your OD Canvas is on its way.</div>
+        <p class="cal-note">Downloads a .ics file with all 30 daily prompts — open it to add to Apple Calendar, Google Calendar, or Outlook.</p>
       </div>
-      <!-- ╔══════════════════════════════════════════════════╗ -->
-      <!-- ║  END BEEHIIV HERO EMBED                          ║ -->
-      <!-- ╚══════════════════════════════════════════════════╝ -->
     </section>
 
     <!-- ═══ MOBILE GARDEN (shows between hero + wyb on mobile) ═ -->
@@ -934,7 +929,7 @@
           <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
             <p class="day-intro">Every organization has things it says it optimizes for. And then there are the things it actually optimizes for. These are rarely identical.</p>
             <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">What does your team or organization say it prioritizes? (Speed, quality, customer obsession, innovation — whatever the stated value is.) Now think about the last month. What did your organization actually reward, protect, or make easier? Write one sentence for each.</p></div>
-            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">The gap between stated and real priorities is not usually hypocrisy — it's design. The organization is producing exactly what its structure and incentives are set up to produce.</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">The gap between stated and real priorities is not usually hypocrisy — it's design. The organization is producing exactly what its structure and incentives are set up to produce. You'll define both of those terms precisely in Phase 2 — for now, just sit with the observation.</p></div>
             <button class="complete-btn" id="btn-4" onclick="markComplete(4)">Mark Day Complete</button>
           </div></div></div>
         </div>
@@ -948,7 +943,7 @@
           </div>
           <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
             <p class="day-intro">The org chart on the intranet shows reporting lines. It rarely shows how work actually moves.</p>
-            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Draw your team's org chart as it officially exists. Then, next to it, draw how work actually flows — who talks to whom, who unblocks whom, where decisions actually land. They don't have to be neat. Just honest.</p></div>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Draw your team's org chart as it officially exists. Then, next to it, draw how work actually flows — who talks to whom, who unblocks whom, where decisions actually land. Think about: who do people actually call when they're stuck? Whose informal sign-off is needed before anything moves? Which relationship holds things together when they're about to fall apart? They don't have to be neat. Just honest.</p></div>
             <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">The delta between these two pictures is some of the most useful information an org designer can have. Hold onto both.</p></div>
             <button class="complete-btn" id="btn-5" onclick="markComplete(5)">Mark Day Complete</button>
           </div></div></div>
@@ -1014,8 +1009,8 @@
             <span class="chevron">›</span>
           </div>
           <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
-            <p class="day-intro">Structure is how an organization groups its work and its people. It's the first and most visible design choice an org makes.</p>
-            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">How is your organization structured? By function (HR, Finance, Engineering)? By product or business line? By geography? By customer type? Write one sentence naming the primary organizing logic — and one sentence on whether you think it's the right one.</p></div>
+            <p class="day-intro">Structure is how an organization groups its work and its people. It's the first and most visible design choice an org makes. Over the next nine days you'll add three more lenses to this one — decision rights, coordination, and incentives — and use all four together to build a diagnosis.</p>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">How is your organization structured? By function (HR, Finance, Engineering)? By product or business line? By geography? By customer type? Write one sentence naming the primary organizing logic — and one sentence on whether you think it's the right one. If your organization uses more than one logic (functional at the top, product-based underneath, for example), that's common — just name the dominant one and note where it blurs.</p></div>
             <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">There is no perfect structure. Every structure optimizes for something and creates friction somewhere else. The question is always: what are we choosing to make easy, and what are we choosing to make hard?</p></div>
             <button class="complete-btn" id="btn-9" onclick="markComplete(9)">Mark Day Complete</button>
           </div></div></div>
@@ -1044,7 +1039,7 @@
             <span class="chevron">›</span>
           </div>
           <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
-            <p class="day-intro">Decision rights are the invisible architecture of an organization — who gets to decide what, and how explicitly that's actually understood.</p>
+            <p class="day-intro">Decision rights are the invisible architecture of an organization — who gets to decide what, and how explicitly that's actually understood. Official ownership, actual decision-making, and blocking power are often three different people — and that gap between them is one of the most common sources of organizational friction.</p>
             <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Pick one type of decision that happens regularly in your organization — a budget call, a hiring decision, a product choice, a process change. Who officially owns it? Who actually makes it? Who can block it? Write one sentence for each.</p></div>
             <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">When these three answers are different people, you have a decision rights problem. It's one of the most common and most costly design gaps in organizations.</p></div>
             <button class="complete-btn" id="btn-11" onclick="markComplete(11)">Mark Day Complete</button>
@@ -1076,7 +1071,7 @@
           <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
             <p class="day-intro">Coordination is how different parts of an organization talk to each other and align their work. It's expensive, and most organizations have too much of the wrong kind.</p>
             <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">How do the different teams or functions in your organization stay aligned? List the main mechanisms: recurring meetings, shared documents, dedicated roles, approval processes. Now mark each one: is it working, neutral, or creating more friction than it solves?</p></div>
-            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">Coordination mechanisms accumulate over time and rarely get retired. Most organizations are carrying coordination debt — meetings and processes that made sense once but now just slow things down.</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">Coordination mechanisms accumulate over time and rarely get retired. Most organizations are carrying coordination debt — the accumulated weight of meetings, approvals, and processes that made sense when they were created but were never retired when they stopped being useful. It's a metaphor, not a formal term, but it describes something very real.</p></div>
             <button class="complete-btn" id="btn-13" onclick="markComplete(13)">Mark Day Complete</button>
           </div></div></div>
         </div>
@@ -1090,7 +1085,7 @@
           </div>
           <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
             <p class="day-intro">Connect today's lens to what you've already observed.</p>
-            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Go back to your friction point from Day 3. Is the root cause a coordination problem? If so, what mechanism is missing — or what mechanism exists but isn't working? Write two sentences.</p></div>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Go back to your friction point from Day 3 — the moment when work slowed unexpectedly, a handoff broke down, or something got stuck. Is the root cause a coordination problem? If so, what mechanism is missing — or what mechanism exists but isn't working? Write two sentences.</p></div>
             <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">Adding more coordination is almost never the answer. The better question is whether the underlying structure is creating a coordination need that shouldn't exist.</p></div>
             <button class="complete-btn" id="btn-14" onclick="markComplete(14)">Mark Day Complete</button>
           </div></div></div>
@@ -1158,7 +1153,7 @@
           <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
             <p class="day-intro">You identified a recurring tension on Day 6. This week you're going to follow it deeper.</p>
             <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Return to that tension. Now that you have the four lenses from Phase 2, what's actually producing it? Is it a structure problem, a decision rights problem, a coordination problem, or an incentives problem — or some combination? Write three sentences naming the root.</p></div>
-            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">Most organizational problems have multiple contributing causes. The skill is identifying which one is load-bearing — the one that, if addressed, would let the others resolve.</p></div>
+            <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">Most organizational problems have multiple contributing causes. The skill is identifying which one is load-bearing — the one that, if addressed, would let the others resolve. A useful test: if you fixed this cause alone, would the other problems shrink or disappear? If yes, it's load-bearing. If the others would persist, keep looking.</p></div>
             <button class="complete-btn" id="btn-18" onclick="markComplete(18)">Mark Day Complete</button>
           </div></div></div>
         </div>
@@ -1171,7 +1166,7 @@
             <span class="chevron">›</span>
           </div>
           <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
-            <p class="day-intro">One of the most important shifts in org design thinking is moving from "people problems" to "conditions problems."</p>
+            <p class="day-intro">One of the most important shifts in org design thinking is moving from "people problems" to "conditions problems." If you work in HR or a people function, this reframe may feel personal — because the "people problem" framing is often exactly what gets handed to you.</p>
             <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Think about a behavior in your organization that frustrates people — something teams or individuals do that seems counterproductive. Now reframe it: what conditions would logically produce that behavior? What would the organization have to be rewarding, structuring, or incentivizing for that behavior to make sense?</p></div>
             <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">If a behavior is widespread, it's almost never a character problem. It's a conditions problem. Organizations get the behavior their design produces.</p></div>
             <button class="complete-btn" id="btn-19" onclick="markComplete(19)">Mark Day Complete</button>
@@ -1202,7 +1197,7 @@
           </div>
           <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
             <p class="day-intro">This is the uncomfortable one. Every organizational problem has people who benefit from it staying unresolved — not maliciously, but structurally.</p>
-            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Who in your organization benefits from the current state — even if they'd say they want it to change? What do they gain from the ambiguity, the friction, or the unresolved tension? Write two sentences. Be honest. This one stays in your canvas.</p></div>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Who in your organization benefits from the current state — even if they'd say they want it to change? What do they gain from the ambiguity, the friction, or the unresolved tension? Write two sentences. Be honest. This one stays in your canvas — it's not meant for your one-pager directly. But it's the private foundation for Day 29, where you'll anticipate who might push back and why.</p></div>
             <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">Change efforts fail most often not because people oppose them openly, but because the design still rewards the old behavior. Knowing who benefits tells you where the resistance will come from.</p></div>
             <button class="complete-btn" id="btn-21" onclick="markComplete(21)">Mark Day Complete</button>
           </div></div></div>
@@ -1284,7 +1279,7 @@
           </div>
           <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
             <p class="day-intro">Now describe what you found across the four lenses.</p>
-            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Write two to three sentences on each lens that's relevant to your diagnosis: structure, decision rights, coordination, incentives. Not all four will apply equally — weight them honestly. This is the evidence section of your one-pager.</p></div>
+            <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Write two to three sentences on each lens that's relevant to your diagnosis: structure, decision rights, coordination, incentives. Not all four will apply equally — weight them honestly. If a lens genuinely isn't a driver in your diagnosis, a single sentence saying so ("Incentives don't appear to be a primary factor here") is a valid observation — it shows you considered it and ruled it out. This is the evidence section of your one-pager.</p></div>
             <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">Conditions descriptions are not complaints. They're observations about what the design is producing. Neutral, specific, and grounded in what you actually observed.</p></div>
             <button class="complete-btn" id="btn-26" onclick="markComplete(26)">Mark Day Complete</button>
           </div></div></div>
@@ -1313,7 +1308,7 @@
             <span class="chevron">›</span>
           </div>
           <div class="day-body-wrap"><div class="day-body"><div class="day-body-inner">
-            <p class="day-intro">One change. Well-reasoned. Honest about uncertainty.</p>
+            <p class="day-intro">One change. Well-reasoned. Honest about uncertainty. Framing a recommendation as a hypothesis isn't hedging — it's the language of someone who understands that organizations are complex systems. Senior leaders who've seen confident-but-wrong recommendations know the difference.</p>
             <div class="prompt-block"><div class="block-label">Today's Prompt</div><p class="prompt-text">Write your recommendation in three sentences: what you'd change, what you believe it would shift, and what you're still uncertain about. Refer back to Day 22. You've had a week to sit with it — has your thinking changed?</p></div>
             <div class="takeaway-block"><div class="block-label">Key Takeaway</div><p class="takeaway-text">A good recommendation is not a plan. It's a hypothesis. The best org designers hold their recommendations lightly and update them when they learn more.</p></div>
             <button class="complete-btn" id="btn-28" onclick="markComplete(28)">Mark Day Complete</button>
@@ -1437,33 +1432,18 @@
 <footer>
   <div class="footer-inner">
 
-    <!-- ╔══════════════════════════════════════════════════╗ -->
-    <!-- ║  BEEHIIV FOOTER EMBED                            ║ -->
-    <!-- ║  Replace this block with your Beehiiv embed for  ║ -->
-    <!-- ║  people who want the newsletter without the      ║ -->
-    <!-- ║  full program signup                             ║ -->
-    <!-- ╚══════════════════════════════════════════════════╝ -->
     <div class="footer-newsletter">
-      <h3>Get the weekly OD newsletter</h3>
+      <h3>Design Layer</h3>
       <p>Short, practical organization design thinking. No jargon. No case studies you can't use.</p>
-      <div id="footer-form-wrap">
-        <form id="footer-form" onsubmit="handleEmailSubmit(event,'footer')">
-          <div class="email-row">
-            <input type="email" id="footer-email" placeholder="Your email address" required>
-            <button type="submit">Subscribe</button>
-          </div>
-        </form>
-        <div class="email-success" id="footer-success">You're in. First issue on its way.</div>
+      <div class="substack-wrap">
+        <iframe src="https://meganheddon.substack.com/embed" width="480" height="320" style="border: 1px solid #E3DDD5; background: #FAF7F2;" frameborder="0" scrolling="no"></iframe>
       </div>
     </div>
-    <!-- ╔══════════════════════════════════════════════════╗ -->
-    <!-- ║  END BEEHIIV FOOTER EMBED                        ║ -->
-    <!-- ╚══════════════════════════════════════════════════╝ -->
 
     <div class="footer-links">
-      <a href="#" target="_blank" rel="noopener"><!-- ADD ENHRGY URL -->EnHRgy</a>
-      <a href="#" target="_blank" rel="noopener"><!-- ADD NEWSLETTER URL -->Newsletter</a>
-      <a href="#" target="_blank" rel="noopener"><!-- ADD PRIVACY URL -->Privacy Policy</a>
+      <a href="#" target="_blank" rel="noopener">EnHRgy</a>
+      <a href="https://meganheddon.substack.com" target="_blank" rel="noopener">Design Layer</a>
+      <a href="privacy.html">Privacy Policy</a>
     </div>
     <p class="footer-copy">&copy; <span id="footer-year"></span> Megan Heddon / EnHRgy. All rights reserved.</p>
   </div>
@@ -1596,6 +1576,82 @@
     });
   }
 
+  /* ─── Day Data (for ICS generation) ────────────────────── */
+  const DAYS = [
+    { title: 'The Decision',               prompt: 'Think of one decision that was made in your organization this week — big or small. Write one sentence describing what it was and how it got made. Don\'t analyze it yet. Just describe it.' },
+    { title: 'Who Was in the Room',         prompt: 'Go back to yesterday\'s decision. Who was involved? Who made the final call? Who was noticeably absent from the conversation? Write down three names or roles — in the room, not in the room, and who you\'d have expected to be there.' },
+    { title: 'Where Work Slows Down',       prompt: 'Think about your last two weeks of work. Where did something slow down that you didn\'t expect? Describe the moment: what were you waiting for, and who or what were you waiting on?' },
+    { title: 'Stated vs. Real',             prompt: 'What does your team or organization say it prioritizes? Now think about the last month. What did your organization actually reward, protect, or make easier? Write one sentence for each.' },
+    { title: 'Two Org Charts',              prompt: 'Draw your team\'s org chart as it officially exists. Then, next to it, draw how work actually flows — who talks to whom, who unblocks whom, where decisions actually land. They don\'t have to be neat. Just honest.' },
+    { title: 'The Recurring Tension',       prompt: 'What\'s a tension in your organization that keeps coming up and never quite gets settled? Describe it in two sentences: what it looks like on the surface, and what you think it\'s really about underneath.' },
+    { title: 'Rest + Reflect',              prompt: 'Look back at what you wrote this week. What surprised you most? What pattern are you starting to notice that you didn\'t expect? Write three sentences — no more.' },
+    { title: 'The Outside Sentence',        prompt: 'Write one sentence describing your organization — or your team — as if explaining it to someone completely outside it. Not the official elevator pitch. An honest description of what it actually is and how it actually works.' },
+    { title: 'What Is Structure',           prompt: 'How is your organization structured? By function? By product or business line? By geography? Write one sentence naming the primary organizing logic — and one sentence on whether you think it\'s the right one.' },
+    { title: 'Apply Structure',             prompt: 'Think about a coordination problem you\'ve experienced — two teams who struggled to work together, a handoff that kept going wrong, a decision that fell into a gap. Does the structure you described yesterday explain why that problem exists? Write two sentences.' },
+    { title: 'Decision Rights',             prompt: 'Pick one type of decision that happens regularly in your organization. Who officially owns it? Who actually makes it? Who can block it? Write one sentence for each.' },
+    { title: 'Apply Decision Rights',       prompt: 'Map the decision rights for that decision. Who owned it officially? Who actually decided? Who could have said no? Does that explain why it moved the way it did?' },
+    { title: 'Coordination',               prompt: 'How do the different teams or functions in your organization stay aligned? List the main mechanisms: recurring meetings, shared documents, dedicated roles, approval processes. Mark each one: is it working, neutral, or creating more friction than it solves?' },
+    { title: 'Apply Coordination',          prompt: 'Go back to your friction point from Day 3. Is the root cause a coordination problem? If so, what mechanism is missing — or what mechanism exists but isn\'t working? Write two sentences.' },
+    { title: 'Incentives',                 prompt: 'What does your organization reward in practice? Think about the last person who got promoted, the last project that got celebrated, the last behavior that got quietly reinforced. Write one sentence on what the pattern tells you.' },
+    { title: 'Apply Incentives',            prompt: 'Who benefits — even unintentionally — from the tension staying unresolved? What does the current incentive structure reward that makes change difficult? Write two sentences.' },
+    { title: 'Rest + Reflect',              prompt: 'Which of the four lenses felt most clarifying when you applied it to your organization? Which felt least relevant — or hardest to apply? Write three sentences.' },
+    { title: 'Follow the Root',             prompt: 'Return to that tension. Now that you have the four lenses from Phase 2, what\'s actually producing it? Is it a structure problem, a decision rights problem, a coordination problem, or an incentives problem — or some combination? Write three sentences naming the root.' },
+    { title: 'Conditions, Not People',      prompt: 'Think about a behavior in your organization that frustrates people. Now reframe it: what conditions would logically produce that behavior? What would the organization have to be rewarding, structuring, or incentivizing for that behavior to make sense?' },
+    { title: 'What Would Have to Be True',  prompt: 'Take the root cause you identified on Day 18. What would have to change — structurally, in decision rights, in coordination, in incentives — for the tension to resolve without someone having to force it? Write one sentence for each lever that applies.' },
+    { title: 'Who Benefits',               prompt: 'Who in your organization benefits from the current state — even if they\'d say they want it to change? What do they gain from the ambiguity, the friction, or the unresolved tension? Write two sentences. Be honest. This one stays in your canvas.' },
+    { title: 'One Lever',                  prompt: 'If you could change one thing — one structural element, one decision right, one coordination mechanism, one incentive — what would it be and why? Write three sentences: what you\'d change, what you think it would shift, and what you\'re uncertain about.' },
+    { title: 'The 90-Second Version',       prompt: 'Imagine you have 90 seconds with a senior leader who is skeptical but open. What would you say? Write it out in full sentences — the problem, why it persists, and what you\'d do about it. Read it back. Is it clear to someone who hasn\'t been thinking about this for three weeks?' },
+    { title: 'Three Sentences',             prompt: 'Write exactly three sentences: (1) What is the tension or problem? (2) Why does it persist — what in the design sustains it? (3) What is one lever that would shift the conditions? This is the spine of your one-pager.' },
+    { title: 'Name the Organization',       prompt: 'Write one clear sentence that names the organization (or team) and the challenge. Not the symptom — the challenge. This is the opening line of your one-pager.' },
+    { title: 'Describe the Conditions',     prompt: 'Write two to three sentences on each lens that\'s relevant to your diagnosis: structure, decision rights, coordination, incentives. Not all four will apply equally — weight them honestly. This is the evidence section of your one-pager.' },
+    { title: 'Symptoms vs. Causes',         prompt: 'List two or three symptoms — what people in this organization complain about or struggle with. Then, for each one, write the underlying cause you\'ve identified. The symptom is what\'s visible. The cause is what your four-lens analysis revealed.' },
+    { title: 'The Recommendation',          prompt: 'Write your recommendation in three sentences: what you\'d change, what you believe it would shift, and what you\'re still uncertain about. Refer back to Day 22. You\'ve had a week to sit with it — has your thinking changed?' },
+    { title: 'Anticipate the Resistance',   prompt: 'Who would push back on your recommendation, and why? Not who you\'d expect to be difficult — who has a legitimate reason to be cautious or skeptical? Write two sentences for each person or group. Then write one sentence on how you\'d address their concern.' },
+    { title: 'Write the One-Pager',         prompt: 'Write your one-page org diagnosis. Use everything from Days 25–29 as your raw material. It should have: one opening sentence naming the organization and challenge, a conditions section, a symptoms vs. causes section, a recommendation, and one sentence on what you\'re watching for.' },
+  ];
+
+  /* ─── Hero Calendar CTA ─────────────────────────────────── */
+  function handleAddToCalendar(e) {
+    e.preventDefault();
+    const date = document.getElementById('cal-start').value;
+    if (!date) return;
+    generateCalendarICS(date);
+  }
+
+  function generateCalendarICS(startDateStr) {
+    const SITE_URL = window.location.origin + window.location.pathname;
+    const esc = s => s.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
+    const [y, m, d] = startDateStr.split('-').map(Number);
+
+    const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Couch to 5K Org Design//EN'];
+
+    DAYS.forEach((day, i) => {
+      const start = new Date(y, m - 1, d + i);
+      const end   = new Date(y, m - 1, d + i + 1);
+      const fmt   = dt => String(dt.getFullYear()) + String(dt.getMonth() + 1).padStart(2, '0') + String(dt.getDate()).padStart(2, '0');
+      lines.push(
+        'BEGIN:VEVENT',
+        'DTSTART;VALUE=DATE:' + fmt(start),
+        'DTEND;VALUE=DATE:'   + fmt(end),
+        'SUMMARY:Day ' + (i + 1) + ': ' + esc(day.title),
+        'DESCRIPTION:' + esc(day.prompt) + '\\n\\nCouch to 5K\\: Org Design — ' + esc(SITE_URL),
+        'END:VEVENT'
+      );
+    });
+
+    lines.push('END:VCALENDAR');
+
+    const blob = new Blob([lines.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = 'couch-to-5k-org-design.ics';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
   /* ─── Commitment / ICS ──────────────────────────────────── */
   function handleCommitment(e) {
     e.preventDefault();
@@ -1608,11 +1664,11 @@
     progress.commitmentVenue = venue;
     progress.commitmentDate  = date;
     saveProgress();
-    generateICS(date, venue);
+    generateCommitmentICS(date, venue);
     document.getElementById('commit-success').classList.add('show');
   }
 
-  function generateICS(date, venue) {
+  function generateCommitmentICS(date, venue) {
     const d = date.replace(/-/g, '');
     const safeVenue = venue.replace(/[,\\]/g, ' ');
     const ics = [
@@ -1623,7 +1679,7 @@
       'DTSTART;VALUE=DATE:' + d,
       'DTEND;VALUE=DATE:' + d,
       'SUMMARY:Share my org diagnosis',
-      'DESCRIPTION:The finish line for Couch to 5K: Org Design. Share your one-page diagnosis at: ' + safeVenue,
+      'DESCRIPTION:The finish line for Couch to 5K\\: Org Design. Share your one-page diagnosis at: ' + safeVenue,
       'LOCATION:' + safeVenue,
       'END:VEVENT',
       'END:VCALENDAR'
@@ -1637,17 +1693,6 @@
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-  }
-
-  /* ─── Email Form (placeholder) ──────────────────────────── */
-  function handleEmailSubmit(e, location) {
-    e.preventDefault();
-    /* When you replace with Beehiiv embed, this function becomes unused.
-       For now, show a success state so the placeholder is functional. */
-    const successEl = document.getElementById(location + '-success');
-    const formEl    = document.getElementById(location + '-form');
-    if (formEl) formEl.style.display = 'none';
-    if (successEl) successEl.classList.add('show');
   }
 
   /* ─── Persistence ───────────────────────────────────────── */
